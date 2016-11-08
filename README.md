@@ -9,7 +9,9 @@ $ pip install us
 $ pip install pollster
 
 $ python election-monte-carlo.py
-Hillary Clinton has a 93.408% chance to win.
+Hillary Clinton has a 94.905% chance to win.
+Median of Hillary Clinton's electoral votes: 311
+Median of Donald Trump's electoral votes: 227
 ```
 
 - The standard deviation of each poll is calculated using the sample size.

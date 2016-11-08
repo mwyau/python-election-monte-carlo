@@ -103,3 +103,5 @@ for i, r in enumerate(random_numbers):
 # Hillary's chance to win
 chance = sum(college_dem > college_required)/n_run*100
 print('Hillary Clinton has a {0:.3f}% chance to win.'.format(chance))
+print('Median of Hillary Clinton\'s electoral votes: {}'.format(int(np.median(college_dem))))
+print('Median of Donald Trump\'s electoral votes: {}'.format(int(college_total-np.median(college_dem))))
