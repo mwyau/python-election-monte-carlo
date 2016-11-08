@@ -22,7 +22,7 @@ with open('electoral-college-votes.csv') as csvfile:
 # Initialize Pollster API
 pollster = Pollster()
 
-date = '2016-11-01' # 2 weeks of polls
+date = '2016-11-01' # 1 weeks of polls between 2016-11-01 and 2016-11-07
 polls = []
 page = 1
 
