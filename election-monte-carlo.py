@@ -82,7 +82,7 @@ for state, poll in polls_by_state.items():
     state_mean_dem[state] = dem_mean/(dem_mean+rep_mean)*100
     
     state_std_dem[state] = np.sqrt(np.average(np.square(dem-dem_mean)+
-                                              (100-dem_mean)*dem_mean/10000, weights=obs))/(dem_mean+rep_mean)*100
+                                              (100-dem)*dem/10000, weights=obs))/(dem_mean+rep_mean)*100
         
     state_cdf_dem[state] = norm.cdf((state_mean_dem[state]-50)/state_std_dem[state])
 
