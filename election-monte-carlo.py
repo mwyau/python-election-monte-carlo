@@ -69,12 +69,9 @@ for question in state_questions:
         polls_by_state[state]['dem'].append(dem)
         polls_by_state[state]['rep'].append(rep)
 
-state_mean_dem = {} # Mean of Democrat votes
-state_mean_rep = {} # Mean of Republican votes
-state_std = {} # Standard deviation of votes
-
-state_cdf_dem = {} # Democrats' chance to win in the state
-state_cdf_rep = {} # Republicans' chance to win in the state
+state_mean_dem = {}
+state_std_dem = {}
+state_cdf_dem = {}
 
 for state, poll in polls_by_state.items():
     dem = np.array(poll['dem'])
@@ -82,13 +79,12 @@ for state, poll in polls_by_state.items():
     obs = np.array(poll['obs'])
     dem_mean = np.average(dem, weights=obs)
     rep_mean = np.average(rep, weights=obs)
-    state_mean_dem[state] = dem_mean/(dem_mean+rep_mean)
-    state_mean_rep[state] = rep_mean/(dem_mean+rep_mean)
+    state_mean_dem[state] = dem_mean/(dem_mean+rep_mean)*100
     
-    state_std[state] = np.sqrt((sum((obs-1)/(obs*4)+obs/4)-sum(obs)/4)/sum(obs-1))
-    
-    state_cdf_dem[state] = norm.cdf((state_mean_dem[state]-0.5)/state_std[state])
-    state_cdf_rep[state] = norm.cdf((state_mean_rep[state]-0.5)/state_std[state])
+    state_std_dem[state] = np.sqrt(np.average(np.square(dem-dem_mean)+
+                                              (100-dem_mean)*dem_mean/10000))/(dem_mean+rep_mean)*100
+        
+    state_cdf_dem[state] = norm.cdf((state_mean_dem[state]-50)/state_std_dem[state])
 
 # Number of Monte Carlo simulations
 n_run = 100000
@@ -97,15 +93,12 @@ random_numbers = random.rand(n_run,len(states))
 college_total = sum(college.values()) # Total electoral college votes
 college_required = college_total/2 # Electoral college votes required to win
 college_dem = np.zeros(n_run) # Democrats' total electoral college votes
-college_rep = np.zeros(n_run) # Republicans' total electoral college votes
 
 # Magic
 for i, r in enumerate(random_numbers):
     for state_index, state in enumerate(state_cdf_dem):
         if r[state_index] < state_cdf_dem[state]:
             college_dem[i] += college[states[state]]
-        else:
-            college_rep[i] += college[states[state]]
 
 # Hillary's chance to win
 chance = sum(college_dem > college_required)/n_run*100
